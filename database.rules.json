@@ -1,0 +1,35 @@
+{
+  "rules": {
+
+    "ParkingSlot": {
+      ".read": "auth != null",
+      "$slot": {
+        ".write": "auth != null && ( auth.uid === 'IX3vCABflqUszWcByADcnAvOt3D3' || root.child('admins').child(auth.uid).val() === true || data.child('UserID').val() === auth.uid || (data.child('Status').val() === 'Available' && newData.child('UserID').val() === auth.uid) )"
+      }
+    },
+
+    "Bookings": {
+      "$uid": {
+        ".read":  "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).val() === true)",
+        ".write": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).val() === true)"
+      }
+    },
+
+    "Gate": {
+      ".read": "auth != null",
+      ".write": "auth != null && (auth.uid === 'IX3vCABflqUszWcByADcnAvOt3D3' || root.child('admins').child(auth.uid).val() === true)"
+    },
+
+    "RegisteredCards": {
+      ".read": "auth != null",
+      "$card": {
+        ".write": "auth != null && (newData.child('UserID').val() === auth.uid || data.child('UserID').val() === auth.uid || data.val() === auth.uid || auth.uid === 'IX3vCABflqUszWcByADcnAvOt3D3')"
+      }
+    },
+
+    "admins": {
+      ".read": "auth != null",
+      ".write": false
+    }
+  }
+}
