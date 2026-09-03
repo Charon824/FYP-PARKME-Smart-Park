@@ -43,11 +43,11 @@
 // ======================
 WiFiMulti wifiMulti;
 
-#define WIFI1_SSID     "yeanpoh_2.4GHz"       // home WiFi (ASCII, reliable)
-#define WIFI1_PASSWORD "a2774333"
+#define WIFI1_SSID     ""       // add your own wifi name and password
+#define WIFI1_PASSWORD ""
 
-#define WIFI2_SSID     "yuihern"              // phone hotspot (not stable)
-#define WIFI2_PASSWORD "08250603"
+#define WIFI2_SSID     ""              
+#define WIFI2_PASSWORD ""
 
 // ======================
 // Firebase  
