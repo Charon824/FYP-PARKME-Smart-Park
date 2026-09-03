@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Press F5 (or the Run button) to launch. It first frees port 8000
+      // (free-port-8000 task), then always serves on localhost:8000 so Google
+      // Sign-In keeps working.
+      "name": "ParkMe (Chrome :8000)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "args": ["--web-hostname", "localhost", "--web-port", "8000"],
+      "preLaunchTask": "free-port-8000"
+    }
+  ]
+}

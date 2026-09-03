@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParkMe — Screens</title>
+<style>
+  :root{
+    --page:#EAF2FD; --card:#FFFFFF; --accent:#1E90FF; --accent-dark:#1565C0; --accent-light:#E3F0FF;
+    --tprimary:#0D1B3E; --tsecondary:#49587C; --thint:#8793AE;
+    --fill:#F4F8FF; --border:#CBD8EE; --divider:#DCE6F5;
+    --green:#22C55E; --amber:#F59E0B; --red:#EF4444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,sans-serif;}
+  body{background:#cdd9ea;padding:40px;display:flex;flex-wrap:wrap;gap:52px;justify-content:center;align-items:flex-start;}
+  .label{position:absolute;top:-26px;left:0;font-size:13px;font-weight:700;color:#33415c;}
+  /* All screens = one uniform iPhone-Pro-Max frame; content scrolls inside */
+  .phone{position:relative;width:402px;min-width:402px;flex:0 0 auto;height:874px;background:var(--page);border-radius:44px;overflow-y:auto;overflow-x:hidden;box-shadow:0 14px 36px rgba(0,0,0,0.20);display:flex;flex-direction:column;border:6px solid #0d1b3e;padding-top:40px;}
+  .phone::-webkit-scrollbar{width:0;height:0;}   /* hide scrollbar for a clean phone look */
+  .phone.tall{}   /* pop-up sheet screens use the same size */
+  /* dynamic-island pill */
+  .phone::before{content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);width:100px;height:28px;background:#0d1b3e;border-radius:16px;z-index:5;}
+  /* shared */
+  .appbar{background:var(--card);display:flex;align-items:center;padding:12px 14px;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-chip{width:32px;height:32px;border-radius:10px;background:rgba(30,144,255,0.20);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:16px;}
+  .pbadge{width:19px;height:19px;border-radius:4px;background:#2e7d32;color:#fff;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;align-self:flex-start;}
+  .logo-word{font-size:20px;font-weight:800;color:var(--tprimary);}
+  .logo-word b{color:var(--accent);font-weight:800;}
+  .free-pill{font-size:12px;font-weight:700;color:var(--accent);background:rgba(30,144,255,0.15);border:1px solid rgba(30,144,255,0.40);border-radius:20px;padding:6px 12px;}
+  .banner{margin:16px;padding:20px;border-radius:22px;background:linear-gradient(135deg,#1E90FF,#1040B0);box-shadow:0 8px 20px rgba(30,144,255,0.35);display:flex;align-items:center;gap:16px;}
+  .banner-l{flex:1;}
+  .banner-num{color:#fff;font-size:22px;font-weight:800;}
+  .banner-sub{color:rgba(255,255,255,0.85);font-size:12px;margin-top:4px;}
+  .bar{height:7px;border-radius:8px;background:rgba(255,255,255,0.2);margin-top:12px;overflow:hidden;}
+  .bar > i{display:block;height:100%;background:#fff;border-radius:8px;}
+  .banner-pct{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;}
+  .section{display:flex;align-items:center;justify-content:space-between;padding:8px 20px 6px;}
+  .section h2{font-size:15px;font-weight:700;color:var(--tprimary);}
+  .legend{display:flex;gap:8px;}
+  .lg{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:500;color:var(--thint);}
+  .dot{width:8px;height:8px;border-radius:50%;}
+  /* slot card */
+  .slot{display:flex;background:var(--card);border-radius:18px;margin:0 16px 12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+  .slot-accent{width:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 0;}
+  .slot-accent .p{font-size:26px;font-weight:900;line-height:1;}
+  .slot-accent .ul{width:28px;height:3px;border-radius:2px;margin-top:4px;}
+  .slot-info{flex:1;padding:14px;display:flex;flex-direction:column;gap:6px;justify-content:center;}
+  .badge{display:inline-flex;align-items:center;gap:4px;width:fit-content;font-size:9px;font-weight:800;letter-spacing:0.6px;padding:3px 9px;border-radius:20px;}
+  .slot-sub{font-size:11px;color:var(--thint);}
+  .slot-act{display:flex;align-items:center;padding-right:14px;}
+  .act-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 14px;border-radius:12px;font-size:10px;font-weight:700;}
+  .act-btn i{font-size:20px;font-style:normal;}
+  .lock{padding:10px;border-radius:12px;background:var(--fill);color:var(--thint);font-size:20px;}
+  /* status helpers */
+  .green{color:var(--green);} .amber{color:var(--amber);} .red{color:var(--red);}
+  .bdr-green{border:1px solid rgba(34,197,94,0.3);} .bdr-red{border:1px solid rgba(239,68,68,0.3);} .bdr-amber{border:1px solid rgba(245,158,11,0.4);}
+  .bg-green{background:rgba(34,197,94,0.08);} .bg-red{background:rgba(239,68,68,0.08);} .bg-amber{background:rgba(245,158,11,0.08);}
+  .badge-green{background:rgba(34,197,94,0.12);color:var(--green);}
+  .badge-red{background:rgba(239,68,68,0.12);color:var(--red);}
+  .badge-amber{background:rgba(245,158,11,0.12);color:var(--amber);}
+  .act-green{background:rgba(30,144,255,0.1);border:1px solid rgba(30,144,255,0.35);color:var(--accent);}
+  .act-red{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);color:var(--red);}
+  .youpill{font-size:9px;font-weight:800;color:var(--accent);background:rgba(30,144,255,0.15);padding:3px 8px;border-radius:20px;}
+  /* stat tiles */
+  .tiles{display:flex;gap:10px;padding:0 16px;}
+  .tile{flex:1;background:var(--card);border-radius:14px;padding:14px 10px;border:1px solid var(--divider);}
+  .tile .n{font-size:22px;font-weight:800;}
+  .tile .t{font-size:10px;color:var(--tsecondary);margin-top:2px;}
+  /* generic card */
+  .card{background:var(--card);border-radius:16px;margin:12px 16px;padding:16px;border:1px solid var(--divider);}
+  .card h3{font-size:13px;font-weight:700;color:var(--tprimary);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+  .greet{padding:8px 16px 0;}
+  .greet .g1{font-size:11px;color:var(--thint);}
+  .greet .g2{font-size:22px;font-weight:800;color:var(--tprimary);}
+  .nav{margin-top:auto;height:64px;background:var(--card);display:flex;border-top:1px solid var(--divider);}
+  .nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;color:var(--thint);text-decoration:none;}
+  .nav a i{font-size:20px;font-style:normal;}
+  .nav a.on{color:var(--accent);}
+  .nav a.on .ic{background:rgba(30,144,255,0.18);border-radius:14px;padding:2px 14px;}
+  .qa{display:flex;gap:10px;padding:0 16px;}
+  .qa div{flex:1;border-radius:14px;padding:16px 14px;font-size:13px;font-weight:700;}
+  .qa .a{background:rgba(30,144,255,0.12);color:var(--accent);}
+  .qa .b{background:rgba(139,92,246,0.12);color:#8b5cf6;}
+  .row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:13px;}
+  .row .l{color:var(--tsecondary);} .row .v{color:var(--tprimary);font-weight:600;}
+  .openpill{font-size:10px;font-weight:700;color:var(--green);background:rgba(34,197,94,0.12);padding:4px 10px;border-radius:20px;}
+  .em-card{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.25);}
+  .clear-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:700;margin-top:8px;}
+  .manage-btn{font-size:11px;font-weight:700;color:var(--amber);background:#fff;border:1px solid var(--amber);border-radius:10px;padding:7px 12px;}
+  .fmap{display:flex;flex-wrap:wrap;gap:8px;}
+  .fslot{flex:1 1 28%;min-width:90px;border-radius:10px;padding:12px 6px;text-align:center;font-size:11px;}
+  .pchip{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;}
+  /* NEW: inputs / login / sheets */
+  .fld{background:var(--fill);border:1px solid var(--border);border-radius:12px;padding:13px 14px;font-size:13px;color:var(--thint);margin:0 16px 12px;display:flex;align-items:center;gap:10px;}
+  .cta{margin:4px 16px;background:var(--accent);color:#fff;text-align:center;padding:15px;border-radius:14px;font-size:15px;font-weight:700;}
+  .tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:14px;margin:0 16px 16px;padding:4px;}
+  .tabs div{flex:1;text-align:center;padding:11px;border-radius:11px;font-size:13px;font-weight:600;color:var(--thint);}
+  .tabs div.on{background:var(--accent);color:#fff;}
+  .divide{display:flex;align-items:center;gap:10px;color:var(--thint);font-size:12px;margin:16px;}
+  .divide::before,.divide::after{content:"";flex:1;height:1px;background:var(--divider);}
+  .gbtn{margin:0 16px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:14px;font-weight:600;color:var(--tprimary);}
+  .gicon{width:20px;height:20px;border-radius:50%;background:conic-gradient(#EA4335 0 25%,#FBBC05 25% 50%,#34A853 50% 75%,#4285F4 75% 100%);position:relative;}
+  .gicon::after{content:"G";position:absolute;inset:3px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#4285F4;}
+  .sheetwrap{position:absolute;inset:0;background:rgba(13,27,62,0.35);}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:26px 26px 0 0;padding:14px 22px 26px;}
+  .grip{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px;}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:1px;border:1px solid var(--border);color:var(--tsecondary);background:var(--fill);}
+  .chip.sel{border:1.6px solid var(--accent);color:var(--accent);background:rgba(30,144,255,0.15);}
+  .nfc{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);border-radius:14px;padding:18px;text-align:center;}
+  .usebtn{background:var(--green);color:#fff;border-radius:10px;padding:11px;font-weight:700;font-size:14px;margin-top:10px;}
+  .addplate{margin-top:8px;background:rgba(30,144,255,0.08);border:1px solid rgba(30,144,255,0.3);border-radius:8px;padding:9px;text-align:center;color:var(--accent);font-size:12px;font-weight:700;}
+  /* NEW: deposit / payment */
+  .pay-amt{background:linear-gradient(135deg,#1E90FF,#1040B0);border-radius:16px;padding:18px;text-align:center;color:#fff;margin-bottom:14px;}
+  .pay-amt .big{font-size:34px;font-weight:800;}
+  .pay-amt .sub{font-size:11px;opacity:.85;margin-top:2px;}
+  .refund-note{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);border-radius:12px;padding:12px;font-size:11px;color:#15803d;margin-bottom:16px;line-height:1.5;}
+  .pm{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:12px;padding:13px;margin-bottom:10px;font-size:13px;color:var(--tprimary);font-weight:600;}
+  .pm.sel{border:1.6px solid var(--accent);background:rgba(30,144,255,0.08);}
+  .pm .ico{width:38px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;}
+  .pm .chk{margin-left:auto;font-size:16px;}
+  /* NEW: web (browser) frames */
+  .webrow{width:100%;display:flex;flex-wrap:wrap;gap:40px;justify-content:center;}
+  .browser{width:720px;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 14px 36px rgba(0,0,0,0.20);position:relative;}
+  .bbar{background:#e6edf6;display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--divider);}
+  .bdot{width:11px;height:11px;border-radius:50%;}
+  .burl{flex:1;background:#fff;border:1px solid var(--divider);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--tsecondary);margin-left:6px;}
+  .bview{background:#dbe6f4;display:flex;justify-content:center;padding:26px 0;min-height:560px;}
+  .bapp{width:390px;background:var(--page);border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.10);display:flex;flex-direction:column;padding-bottom:10px;}
+  .bapp .nav{margin-top:14px;}
+  /* NEW: settings toggles / quick booking / logout */
+  .toggle{width:38px;height:22px;border-radius:20px;position:relative;flex-shrink:0;}
+  .toggle.on{background:var(--accent);} .toggle.off{background:var(--border);}
+  .toggle::after{content:"";position:absolute;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;}
+  .toggle.on::after{right:2px;} .toggle.off::after{left:2px;}
+  .setrow{display:flex;align-items:center;gap:12px;padding:11px 0;}
+  .setrow+.setrow{border-top:1px solid var(--divider);}
+  .setrow .si{width:34px;height:34px;border-radius:9px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:15px;}
+  .setrow .st{flex:1;} .setrow .st b{font-size:13px;color:var(--tprimary);font-weight:600;display:block;} .setrow .st span{font-size:10px;color:var(--thint);}
+  .logout{margin:12px 16px 0;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:13px;text-align:center;color:var(--red);font-weight:700;font-size:14px;}
+  .qbslot{flex:1;border-radius:10px;padding:12px 4px;text-align:center;font-size:10px;font-weight:700;}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ============ LOGIN — EMAIL SIGN IN ============ -->
+<div class="phone">
+  <div class="label">Login — Email</div>
+  <div class="appbar"><span style="color:var(--tprimary)">‹</span><span style="color:var(--accent);font-weight:700">Sign Up</span></div>
+  <div style="padding:16px 20px 0">
+    <div class="logo" style="margin-bottom:22px"><span style="font-size:26px">🚗</span><div class="logo-word" style="color:#5b8def;font-size:24px">Park<b style="color:#3a6fd8">Me</b></div><span class="pbadge">P</span></div>
+    <div style="font-size:26px;font-weight:800;color:var(--tprimary)">Welcome back</div>
+    <div style="font-size:13px;color:var(--tsecondary);margin:6px 0 20px">Sign in for a better parking experience</div>
+  </div>
+  <div class="tabs"><div class="on">Email</div><div>Phone</div></div>
+  <div class="fld">✉ &nbsp;Email address</div>
+  <div class="fld">🔒 &nbsp;Password (min 8 characters) <span style="margin-left:auto">👁</span></div>
+  <div style="text-align:right;padding:0 16px;color:var(--accent);font-size:12px">Forgot Password?</div>
+  <div class="cta" style="margin-top:14px">Sign In</div>
+  <div class="divide">or continue with</div>
+  <div class="gbtn"><span class="gicon"></span> Continue with Google</div>
+  <div style="text-align:center;margin-top:22px;font-size:13px;color:var(--tsecondary)">Don't have an account? <b style="color:var(--accent)">Sign Up</b></div>
+</div>
+
+<!-- ============ LOGIN — PHONE SIGN IN ============ -->
+<div class="phone">
+  <div class="label">Login — Phone (OTP)</div>
+  <div class="appbar"><span style="color:var(--tprimary)">‹</span><span style="color:var(--accent);font-weight:700">Sign Up</span></div>
+  <div style="padding:16px 20px 0">
+    <div class="logo" style="margin-bottom:22px"><span style="font-size:26px">🚗</span><div class="logo-word" style="color:#5b8def;font-size:24px">Park<b style="color:#3a6fd8">Me</b></div><span class="pbadge">P</span></div>
+    <div style="font-size:26px;font-weight:800;color:var(--tprimary)">Welcome back</div>
+    <div style="font-size:13px;color:var(--tsecondary);margin:6px 0 20px">Sign in for a better parking experience</div>
+  </div>
+  <div class="tabs"><div>Email</div><div class="on">Phone</div></div>
+  <div class="fld">🇲🇾 &nbsp;+60 &nbsp;|&nbsp; 10 - 12 digit phone number</div>
+  <div style="margin:0 16px 12px;padding:12px;border-radius:12px;background:rgba(30,144,255,0.08);border:1px solid rgba(30,144,255,0.2);font-size:12px;color:var(--tsecondary)">ⓘ &nbsp;A 6-digit OTP will be sent to your number via SMS.</div>
+  <div class="cta" style="margin-top:6px">Send OTP</div>
+  <div class="divide">or continue with</div>
+  <div class="gbtn"><span class="gicon"></span> Continue with Google</div>
+  <div style="text-align:center;margin-top:22px;font-size:13px;color:var(--tsecondary)">Don't have an account? <b style="color:var(--accent)">Sign Up</b></div>
+</div>
+
+<!-- ============ SIGN UP ============ -->
+<div class="phone">
+  <div class="label">Sign Up</div>
+  <div class="appbar"><span style="color:var(--tprimary)">‹</span><span style="color:var(--accent);font-weight:700">Sign In</span></div>
+  <div style="padding:14px 20px 0">
+    <div style="font-size:26px;font-weight:800;color:var(--tprimary)">Create Account</div>
+    <div style="font-size:13px;color:var(--tsecondary);margin:6px 0 18px">Join now for a better parking experience and save your time!</div>
+  </div>
+  <div class="tabs"><div class="on">Email</div><div>Phone</div></div>
+  <div class="fld">👤 &nbsp;Full name</div>
+  <div class="fld">✉ &nbsp;Email address</div>
+  <div class="fld">🔒 &nbsp;Password (min 8 characters) <span style="margin-left:auto">👁</span></div>
+  <div class="fld">🔒 &nbsp;Confirm password <span style="margin-left:auto">👁</span></div>
+  <div style="display:flex;align-items:flex-start;gap:10px;padding:0 18px;margin-bottom:14px">
+    <div style="width:20px;height:20px;border-radius:5px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">✓</div>
+    <div style="font-size:12px;color:var(--tsecondary)">I agree to ParkMe's <b style="color:var(--accent)">Terms of Service</b> and <b style="color:var(--accent)">Privacy Policy</b></div>
+  </div>
+  <div class="cta">Create Account</div>
+  <div class="divide">or sign up with</div>
+  <div class="gbtn"><span class="gicon"></span> Continue with Google</div>
+  <div style="text-align:center;margin-top:18px;font-size:13px;color:var(--tsecondary)">Already have an account? <b style="color:var(--accent)">Sign In</b></div>
+</div>
+
+<!-- ============ HOME (3 slots) ============ -->
+<div class="phone">
+  <div class="label">Home</div>
+  <div class="appbar">
+    <div class="logo"><span style="font-size:22px">🚗</span><div class="logo-word" style="color:#5b8def">Park<b style="color:#3a6fd8">Me</b></div><span class="pbadge">P</span></div>
+    <span style="color:var(--thint)"></span>
+  </div>
+  <div class="greet"><div class="g1">Good day, Yui 👋</div><div class="g2">Find your parking spot</div></div>
+  <div class="banner">
+    <div class="banner-l">
+      <div class="banner-num">1 Slot Available</div>
+      <div class="banner-sub">out of 3 total slots</div>
+      <div class="bar"><i style="width:33%"></i></div>
+    </div>
+    <div class="banner-pct">33%</div>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="n green">1</div><div class="t">Available</div></div>
+    <div class="tile"><div class="n amber">1</div><div class="t">Reserved</div></div>
+    <div class="tile"><div class="n red">1</div><div class="t">Occupied</div></div>
+  </div>
+  <div class="section"><h2>Quick Actions</h2></div>
+  <div class="qa"><div class="a">⊞ Book a Slot</div><div class="b">📈 Live Dashboard</div></div>
+  <!-- Floor map on Home -->
+  <div class="card">
+    <h3>🗺 Floor Map</h3>
+    <div style="text-align:center;margin-bottom:8px"><span style="font-size:10px;color:var(--accent);background:rgba(30,144,255,0.1);padding:3px 10px;border-radius:20px">↓ ENTRANCE</span></div>
+    <div class="fmap">
+      <div class="fslot bg-green bdr-green"><b class="green">P1</b><div class="green">Available</div></div>
+      <div class="fslot bg-amber bdr-amber"><b class="amber">P2</b><div class="amber">Reserved</div></div>
+      <div class="fslot bg-red bdr-red"><b class="red">P3</b><div class="red">Occupied</div></div>
+    </div>
+    <div style="border-top:1px solid var(--divider);margin-top:12px;padding-top:10px;font-size:11px;color:var(--tsecondary)">📍 Lot A — Block 7 &nbsp;·&nbsp; RM 2/hr &nbsp;·&nbsp; Sensor Active</div>
+  </div>
+  <div class="nav">
+    <a class="on"><span class="ic"><i>🏠︎</i></span>Home</a>
+    <a><i>🔖</i>Book</a><a><i>📈</i>Dashboard</a><a><i>👤</i>Profile</a><a><i>⚙️</i>Admin</a>
+  </div>
+</div>
+
+<!-- ============ BOOK 1 — ALL AVAILABLE (no reservations) ============ -->
+<div class="phone">
+  <div class="label">Book — all available</div>
+  <div class="appbar">
+    <div class="logo"><span style="font-size:22px">🚗</span><div class="logo-word" style="color:#5b8def">Park<b style="color:#3a6fd8">Me</b></div><span class="pbadge">P</span></div>
+    <div class="free-pill">3 / 3 Free</div>
+  </div>
+  <div class="banner">
+    <div class="banner-l">
+      <div class="banner-num">3 Slots Available</div>
+      <div class="banner-sub">out of 3 total slots</div>
+      <div class="bar"><i style="width:100%"></i></div>
+    </div>
+    <div class="banner-pct">0%</div>
+  </div>
+  <div class="section">
+    <h2>Select a Slot</h2>
+    <div class="legend">
+      <span class="lg"><span class="dot" style="background:#22C55E"></span>Available</span>
+      <span class="lg"><span class="dot" style="background:#F59E0B"></span>Reserved</span>
+      <span class="lg"><span class="dot" style="background:#EF4444"></span>Occupied</span>
+    </div>
+  </div>
+  <div class="slot bdr-green">
+    <div class="slot-accent bg-green"><div class="p green">P1</div><div class="ul" style="background:rgba(34,197,94,0.4)"></div></div>
+    <div class="slot-info"><span class="badge badge-green">✓ AVAILABLE</span><span class="slot-sub">Tap to reserve this slot</span></div>
+    <div class="slot-act"><div class="act-btn act-green"><i>+</i>RESERVE</div></div>
+  </div>
+  <div class="slot bdr-green">
+    <div class="slot-accent bg-green"><div class="p green">P2</div><div class="ul" style="background:rgba(34,197,94,0.4)"></div></div>
+    <div class="slot-info"><span class="badge badge-green">✓ AVAILABLE</span><span class="slot-sub">Tap to reserve this slot</span></div>
+    <div class="slot-act"><div class="act-btn act-green"><i>+</i>RESERVE</div></div>
+  </div>
+  <div class="slot bdr-green">
+    <div class="slot-accent bg-green"><div class="p green">P3</div><div class="ul" style="background:rgba(34,197,94,0.4)"></div></div>
+    <div class="slot-info"><span class="badge badge-green">✓ AVAILABLE</span><span class="slot-sub">Tap to reserve this slot</span></div>
+    <div class="slot-act"><div class="act-btn act-green"><i>+</i>RESERVE</div></div>
+  </div>
+  <div style="font-size:9px;color:var(--thint);text-align:center;margin-top:2px">💡 All 3 slots are available — No any reservations or cars yet</div>
+  <div class="nav">
+    <a><i>🏠︎</i>Home</a><a class="on"><span class="ic"><i>🔖</i></span>Book</a>
+    <a><i>📈</i>Dashboard</a><a><i>👤</i>Profile</a><a><i>⚙️</i>Admin</a>
+  </div>
+</div>
+
+<!-- ============ BOOK 2 — TWO USERS, PRIVATE (can't see each other) ============ -->
+<div class="phone">
+  <div class="label">Book — 2 users, private</div>
+  <div class="appbar">
+    <div class="logo"><span style="font-size:22px">🚗</span><div class="logo-word" style="color:#5b8def">Park<b style="color:#3a6fd8">Me</b></div><span class="pbadge">P</span></div>
+    <div class="free-pill">1 / 3 Free</div>
+  </div>
+  <div class="banner">
+    <div class="banner-l">
+      <div class="banner-num">1 Slot Available</div>
+      <div class="banner-sub">out of 3 total slots</div>
+      <div class="bar"><i style="width:33%"></i></div>
+    </div>
+    <div class="banner-pct">33%</div>
+  </div>
+  <div style="text-align:center;font-size:10px;color:var(--tsecondary);background:rgba(30,144,255,0.08);margin:0 16px 0;padding:6px;border-radius:8px">👁 Signed in as <b>User A</b> — you only see YOUR booking details</div>
+  <div class="section" style="padding-top:10px">
+    <h2>Select a Slot</h2>
+    <div class="legend">
+      <span class="lg"><span class="dot" style="background:#22C55E"></span>Available</span>
+      <span class="lg"><span class="dot" style="background:#F59E0B"></span>Reserved</span>
+      <span class="lg"><span class="dot" style="background:#EF4444"></span>Occupied</span>
+    </div>
+  </div>
+  <!-- P1 reserved by ME (User A) -> full details visible -->
+  <div class="slot bdr-amber" style="border-width:2px;border-color:var(--accent)">
+    <div class="slot-accent bg-amber"><div class="p amber">P1</div><div class="ul" style="background:rgba(245,158,11,0.4)"></div></div>
+    <div class="slot-info">
+      <div style="display:flex;gap:6px"><span class="badge badge-amber">⏱ RESERVED</span><span class="youpill">YOUR SLOT</span></div>
+      <span class="slot-sub" style="color:var(--tsecondary)">🚗 FE 1610 &nbsp;•&nbsp; #BK963420</span>
+    </div>
+    <div class="slot-act"><div class="act-btn act-red"><i>✕</i>Cancel</div></div>
+  </div>
+  <!-- P2 reserved by ANOTHER (User B) -> details hidden -->
+  <div class="slot bdr-amber">
+    <div class="slot-accent bg-amber"><div class="p amber">P2</div><div class="ul" style="background:rgba(245,158,11,0.4)"></div></div>
+    <div class="slot-info"><span class="badge badge-amber">⏱ RESERVED</span><span class="slot-sub">🔒 Reserved by another user</span></div>
+    <div class="slot-act"><div class="lock">🔒</div></div>
+  </div>
+  <!-- P3 available -->
+  <div class="slot bdr-green">
+    <div class="slot-accent bg-green"><div class="p green">P3</div><div class="ul" style="background:rgba(34,197,94,0.4)"></div></div>
+    <div class="slot-info"><span class="badge badge-green">✓ AVAILABLE</span><span class="slot-sub">Tap to reserve this slot</span></div>
+    <div class="slot-act"><div class="act-btn act-green"><i>+</i>RESERVE</div></div>
+  </div>
+  <div style="font-size:9px;color:var(--thint);text-align:center;margin-top:2px">💡 P1 = yours (plate + Booking ID shown) · P2 = User B's (hidden — privacy)</div>
+  <div class="nav">
+    <a><i>🏠︎</i>Home</a><a class="on"><span class="ic"><i>🔖</i></span>Book</a>
+    <a><i>📈</i>Dashboard</a><a><i>👤</i>Profile</a><a><i>⚙️</i>Admin</a>
+  </div>
+</div>
+
+<!-- ============ BOOK 3 — ONE SLOT OCCUPIED ============ -->
+<div class="phone">
+  <div class="label">Book — one occupied</div>
+  <div class="appbar">
+    <div class="logo"><span style="font-size:22px">🚗</span><div class="logo-word" style="color:#5b8def">Park<b style="color:#3a6fd8">Me</b></div><span class="pbadge">P</span></div>
+    <div class="free-pill">2 / 3 Free</div>
+  </div>
+  <div class="banner">
+    <div class="banner-l">
+      <div class="banner-num">2 Slots Available</div>
+      <div class="banner-sub">out of 3 total slots</div>
+      <div class="bar"><i style="width:67%"></i></div>
+    </div>
+    <div class="banner-pct">33%</div>
+  </div>
+  <div class="section">
+    <h2>Select a Slot</h2>
+    <div class="legend">
+      <span class="lg"><span class="dot" style="background:#22C55E"></span>Available</span>
+      <span class="lg"><span class="dot" style="background:#EF4444"></span>Occupied</span>
+    </div>
+  </div>
+  <div class="slot bdr-green">
+    <div class="slot-accent bg-green"><div class="p green">P1</div><div class="ul" style="background:rgba(34,197,94,0.4)"></div></div>
+    <div class="slot-info"><span class="badge badge-green">✓ AVAILABLE</span><span class="slot-sub">Tap to reserve this slot</span></div>
+    <div class="slot-act"><div class="act-btn act-green"><i>+</i>RESERVE</div></div>
+  </div>
+  <div class="slot bdr-green">
+    <div class="slot-accent bg-green"><div class="p green">P2</div><div class="ul" style="background:rgba(34,197,94,0.4)"></div></div>
+    <div class="slot-info"><span class="badge badge-green">✓ AVAILABLE</span><span class="slot-sub">Tap to reserve this slot</span></div>
+    <div class="slot-act"><div class="act-btn act-green"><i>+</i>RESERVE</div></div>
+  </div>
+  <!-- P3 occupied (car detected by sensor) -->
+  <div class="slot bdr-red">
+    <div class="slot-accent bg-red"><div class="p red">P3</div><div class="ul" style="background:rgba(239,68,68,0.4)"></div></div>
+    <div class="slot-info"><span class="badge badge-red">🚗 OCCUPIED</span><span class="slot-sub">Currently Occupied</span></div>
+    <div class="slot-act"><div class="lock">🔒</div></div>
+  </div>
+  <div style="font-size:9px;color:var(--thint);text-align:center;margin-top:2px">💡 P3 sensor detected a car → auto-marked Occupied (can't be booked)</div>
+  <div class="nav">
+    <a><i>🏠︎</i>Home</a><a class="on"><span class="ic"><i>🔖</i></span>Book</a>
+    <a><i>📈</i>Dashboard</a><a><i>👤</i>Profile</a><a><i>⚙️</i>Admin</a>
+  </div>
+</div>
+
+<!-- ============ RESERVE SHEET (car picker) ============ -->
+<div class="phone tall">
+  <div class="label">Reserve sheet — pick car</div>
+  <div style="filter:blur(1px);opacity:.5">
+    <div class="appbar"><div class="logo"><span style="font-size:22px">🚗</span><div class="logo-word" style="color:#5b8def">Park<b style="color:#3a6fd8">Me</b></div><span class="pbadge">P</span></div><div class="free-pill">1 / 3 Free</div></div>
+    <div class="banner"><div class="banner-l"><div class="banner-num">1 Slot Available</div><div class="banner-sub">out of 3</div></div><div class="banner-pct">33%</div></div>
+  </div>
+  <div class="sheetwrap">
+    <div class="sheet">
+      <div class="grip"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+        <div style="width:42px;height:42px;border-radius:14px;background:rgba(30,144,255,0.15);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px">P</div>
+        <div><div style="font-weight:700;font-size:17px;color:var(--tprimary)">Reserve Slot 1</div><div style="font-size:11px;color:var(--amber)">Arrive within 15 minutes</div></div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--tsecondary);margin-bottom:8px">Choose your car</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <span class="chip sel">🚙 FE 1610</span>
+        <span class="chip">🚗 ABC 1234</span>
+      </div>
+      <div class="fld" style="margin:0 0 14px;color:var(--tprimary)">💳 FE 1610</div>
+      <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:12px;font-size:11px;color:var(--amber);margin-bottom:18px">ⓘ Reservation auto-cancels if you don't arrive within 15 minutes.</div>
+      <div class="cta" style="margin:0">Confirm Reservation</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD (3 slots) ============ -->
+<div class="phone">
+  <div class="label">Dashboard</div>
+  <div class="appbar">
+    <div style="display:flex;align-items:center;gap:8px"><span class="dot" style="background:#22C55E"></span><b style="font-size:16px;color:var(--tprimary)">Dashboard</b></div>
+    <span style="font-size:10px;color:var(--thint)">Updated</span>
+  </div>
+  <div class="tiles" style="margin-top:12px">
+    <div class="tile"><div class="n green">1</div><div class="t">Available</div></div>
+    <div class="tile"><div class="n amber">1</div><div class="t">Reserved</div></div>
+    <div class="tile"><div class="n red">1</div><div class="t">Occupied</div></div>
+    <div class="tile"><div class="n" style="color:var(--accent)">3</div><div class="t">Total</div></div>
+  </div>
+  <div class="card">
+    <h3>Lot Occupancy <span style="margin-left:auto;font-size:10px;color:var(--accent);font-weight:700">67% in use</span></h3>
+    <div style="height:14px;border-radius:8px;overflow:hidden;display:flex">
+      <i style="width:33%;background:var(--red)"></i><i style="width:34%;background:var(--amber)"></i><i style="width:33%;background:var(--green)"></i>
+    </div>
+    <div style="display:flex;gap:14px;margin-top:8px;font-size:10px;color:var(--tsecondary)">
+      <span><span class="dot" style="background:#EF4444;display:inline-block"></span> Occupied 1</span>
+      <span><span class="dot" style="background:#F59E0B;display:inline-block"></span> Reserved 1</span>
+      <span><span class="dot" style="background:#22C55E;display:inline-block"></span> Available 1</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🗺 Floor Map</h3>
+    <div style="text-align:center;margin-bottom:8px"><span style="font-size:10px;color:var(--accent);background:rgba(30,144,255,0.1);padding:3px 10px;border-radius:20px">↓ ENTRANCE</span></div>
+    <div class="fmap">
+      <div class="fslot bg-green bdr-green"><b class="green">P1</b><div class="green">Available</div></div>
+      <div class="fslot bg-amber bdr-amber"><b class="amber">P2</b><div class="amber">Reserved</div></div>
+      <div class="fslot bg-red bdr-red"><b class="red">P3</b><div class="red">Occupied</div></div>
+    </div>
+  </div>
+  <!-- Slot Details — live per-slot sensor readout -->
+  <div class="card">
+    <h3>📋 Slot Details <span style="margin-left:auto;font-size:10px;color:var(--thint)">connected to sensors</span></h3>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 0">
+      <div class="pchip bg-green green">P1</div>
+      <div style="flex:1"><span class="badge badge-green">AVAILABLE</span></div>
+      <div style="text-align:center"><div style="width:9px;height:9px;border-radius:50%;background:var(--green);margin:0 auto"></div><div style="font-size:8px;color:var(--thint)">sensor</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--divider)">
+      <div class="pchip bg-amber amber">P2</div>
+      <div style="flex:1"><span class="badge badge-amber">RESERVED</span><div style="font-size:9px;color:var(--thint);margin-top:3px">RFID: D37D1409 · #BK963420</div></div>
+      <div style="text-align:center"><div style="width:9px;height:9px;border-radius:50%;background:var(--amber);margin:0 auto"></div><div style="font-size:8px;color:var(--thint)">sensor</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--divider)">
+      <div class="pchip bg-red red">P3</div>
+      <div style="flex:1"><span class="badge badge-red">OCCUPIED</span><div style="font-size:9px;color:var(--thint);margin-top:3px">🚗 car detected · 3.6 cm</div></div>
+      <div style="text-align:center"><div style="width:9px;height:9px;border-radius:50%;background:var(--red);margin:0 auto"></div><div style="font-size:8px;color:var(--thint)">sensor</div></div>
+    </div>
+  </div>
+
+  <!-- Sensor Status — light blue theme -->
+  <div class="card" style="background:var(--accent-light);border:1px solid rgba(30,144,255,0.25)">
+    <h3 style="color:var(--accent)">🚨 Sensor Status</h3>
+    <div class="row"><span class="l">Connection</span><span class="v green">Firebase RTDB  🔴  Live</span></div>
+    <div class="row" style="border-top:1px solid rgba(30,144,255,0.15)"><span class="l">Protocol</span><span class="v" style="color:var(--accent)">Sensor → Firebase → App</span></div>
+    <div class="row" style="border-top:1px solid rgba(30,144,255,0.15)"><span class="l">Last update</span><span class="v">14:50:23</span></div>
+    <div style="background:#fff;border-radius:10px;padding:10px;margin-top:10px;font-size:10px;color:var(--tsecondary);line-height:1.5">ℹ️ Each slot is detected by an ultrasonic sensor. When a car parks or leaves, the sensor will updates in Firebase RTDB and this dashboard reflects it instantly.</div>
+  </div>
+  <div class="nav">
+    <a><i>🏠︎</i>Home</a><a><i>🔖</i>Book</a>
+    <a class="on"><span class="ic"><i>📈</i></span>Dashboard</a><a><i>👤</i>Profile</a><a><i>⚙️</i>Admin</a>
+  </div>
+</div>
+
+<!-- ============ PROFILE (photo + multi-plate + counters) ============ -->
+<div class="phone">
+  <div class="label">Profile</div>
+  <div class="appbar"><b style="font-size:16px;color:var(--tprimary)">My Profile</b></div>
+  <div class="card" style="display:flex;align-items:center;gap:12px">
+    <div style="position:relative;width:56px;height:56px">
+      <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1E90FF,#1040B0);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px">YH</div>
+      <div style="position:absolute;right:-2px;bottom:-2px;width:20px;height:20px;border-radius:50%;background:var(--accent);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">📷</div>
+    </div>
+    <div><div style="font-weight:700;color:var(--tprimary)">Yui Hern</div>
+    <div style="font-size:11px;color:var(--thint)">yyuihernxd@gmail.com</div>
+    <div style="font-size:10px;color:var(--accent);background:rgba(30,144,255,0.1);padding:2px 8px;border-radius:20px;width:fit-content;margin-top:4px">📷 Select a photo to upload</div></div>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="n" style="color:var(--accent)">5</div><div class="t">Total Bookings</div></div>
+    <div class="tile"><div class="n green">1</div><div class="t">Active Booking</div></div>
+    <div class="tile"><div class="n" style="color:var(--tsecondary)">4</div><div class="t">Completed</div></div>
+  </div>
+  <div style="font-size:9px;color:var(--thint);text-align:center;margin-top:4px">💡 Counts up: Reservations made → car parks → leaves = completed</div>
+  <div class="card">
+    <h3>🚗 Vehicle &amp; RFID <span style="margin-left:auto;font-size:11px;color:var(--accent)">✎ Edit</span></h3>
+    <div style="font-size:10px;color:var(--tsecondary);margin-bottom:6px">Car plates (default is used for booking)</div>
+    <div style="display:flex;align-items:center;gap:6px;border:1.5px solid var(--accent);border-radius:8px;padding:9px;margin-bottom:8px"><b style="color:var(--accent);letter-spacing:2px">FE 1610</b><span style="font-size:8px;font-weight:800;color:var(--accent);background:rgba(30,144,255,0.15);padding:2px 7px;border-radius:20px">DEFAULT</span><span style="margin-left:auto;color:var(--thint)">☆ 🗑</span></div>
+    <div style="display:flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:8px;padding:9px"><b style="color:var(--accent);letter-spacing:2px">ABC 1234</b><span style="margin-left:auto;color:var(--thint)">☆ 🗑</span></div>
+    <div class="addplate">＋ Add car plate</div>
+    <div style="border:1px solid var(--green);border-radius:8px;padding:9px;margin-top:10px;color:var(--green);font-size:13px">✓ D37D1409 &nbsp; RFID tag</div>
+  </div>
+
+  <!-- Quick Booking (floor map selector) -->
+  <div class="card">
+    <h3>⚡ Quick Booking</h3>
+    <div style="text-align:center;margin-bottom:8px"><span style="font-size:10px;color:var(--accent);background:rgba(30,144,255,0.1);padding:3px 10px;border-radius:20px">↓ ENTRANCE</span></div>
+    <div style="display:flex;gap:8px">
+      <div class="qbslot bg-green bdr-green" style="border:1.6px solid var(--accent)"><b class="green" style="font-size:14px">P1</b><div class="green">Available ✓</div></div>
+      <div class="qbslot bg-amber bdr-amber"><b class="amber" style="font-size:14px">P2</b><div class="amber">Reserved</div></div>
+      <div class="qbslot bg-red bdr-red"><b class="red" style="font-size:14px">P3</b><div class="red">Occupied</div></div>
+    </div>
+    <div class="cta" style="margin:12px 0 0">Book Slot P1</div>
+  </div>
+
+  <!-- Settings -->
+  <div class="card">
+    <h3>⚙️ Settings</h3>
+    <div class="setrow"><div class="si">🔔</div><div class="st"><b>Push Notifications</b><span>Booking &amp; gate alerts</span></div><div class="toggle on"></div></div>
+    <div class="setrow"><div class="si">📍</div><div class="st"><b>Location Access</b><span>Find nearest parking</span></div><div class="toggle on"></div></div>
+    <div class="setrow"><div class="si">📶</div><div class="st"><b>Auto RFID Scan</b><span>Scan card on app launch</span></div><div class="toggle off"></div></div>
+  </div>
+
+  <!-- Logout -->
+  <div class="logout"> ➜] &nbsp;Sign Out</div>
+
+  <div class="nav">
+    <a><i>🏠︎</i>Home</a><a><i>🔖</i>Book</a><a><i>📈</i>Dashboard</a>
+    <a class="on"><span class="ic"><i>👤</i></span>Profile</a><a><i>⚙️</i>Admin</a>
+  </div>
+</div>
+
+<!-- ============ RFID SCAN SHEET (live tap) ============ -->
+<div class="phone tall">
+  <div class="label">RFID scan — live tap</div>
+  <div style="filter:blur(1px);opacity:.5">
+    <div class="appbar"><b style="font-size:16px;color:var(--tprimary)">My Profile</b></div>
+    <div class="card"><h3>🚗 Vehicle &amp; RFID</h3><div style="height:60px"></div></div>
+  </div>
+  <div class="sheetwrap">
+    <div class="sheet">
+      <div class="grip"></div>
+      <div style="text-align:center;font-size:17px;font-weight:700;color:var(--tprimary)">RFID Tag</div>
+      <div style="text-align:center;font-size:12px;color:var(--tsecondary);margin:6px 0 18px">Tap your card on the gate reader.</div>
+      <div class="nfc">
+        <div style="font-size:34px">💳</div>
+        <div style="font-size:11px;color:var(--tsecondary);margin-top:6px">Last tapped card</div>
+        <div style="font-size:22px;font-weight:800;color:var(--green);letter-spacing:2px;font-family:monospace">D37D1409</div>
+        <div class="usebtn">✓ Use this card</div>
+      </div>
+      <div class="divide" style="margin:16px 0">or enter manually</div>
+      <div class="fld" style="margin:0 0 14px;color:var(--thint)">📶 e.g. 04A1B2C3</div>
+      <div class="cta" style="margin:0">Save RFID Tag</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADMIN (3 slots) ============ -->
+<div class="phone">
+  <div class="label">Admin</div>
+  <div class="appbar">
+    <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--tprimary)">←</span><b style="font-size:16px;color:var(--tprimary)">Admin Panel</b></div>
+    <span style="color:var(--accent)">✚</span>
+  </div>
+  <div class="tiles" style="margin-top:12px">
+    <div class="tile"><div class="n green">1</div><div class="t">Available</div></div>
+    <div class="tile"><div class="n amber">1</div><div class="t">Reserved</div></div>
+    <div class="tile"><div class="n red">1</div><div class="t">Occupied</div></div>
+    <div class="tile"><div class="n" style="color:var(--accent)">3</div><div class="t">Total</div></div>
+  </div>
+  <div class="card em-card">
+    <h3 class="red">⚠️ Emergency Controls</h3>
+    <div style="font-size:11px;color:var(--tsecondary)">Manual override when the user interface can't function.</div>
+    <button class="clear-btn">🗑 Clear All Reservations</button>
+  </div>
+  <div class="section"><h2>Manage Slots</h2><span style="font-size:10px;color:var(--thint)">3 slots</span></div>
+  <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px">
+    <div class="slot" style="margin:0;align-items:center;padding:10px 12px;justify-content:space-between"><div style="display:flex;gap:10px;align-items:center"><div class="pchip bg-green green">P1</div><span class="badge badge-green">AVAILABLE</span></div><button class="manage-btn">⚙ Manage</button></div>
+    <div class="slot" style="margin:0;align-items:center;padding:10px 12px;justify-content:space-between"><div style="display:flex;gap:10px;align-items:center"><div class="pchip bg-amber amber">P2</div><span class="badge badge-amber">RESERVED</span></div><button class="manage-btn">⚙ Manage</button></div>
+    <div class="slot" style="margin:0;align-items:center;padding:10px 12px;justify-content:space-between"><div style="display:flex;gap:10px;align-items:center"><div class="pchip bg-red red">P3</div><span class="badge badge-red">OCCUPIED</span></div><button class="manage-btn">⚙ Manage</button></div>
+  </div>
+  <div class="nav">
+    <a><i>🏠︎</i>Home</a><a><i>🔖</i>Book</a><a><i>📈</i>Dashboard</a><a><i>👤</i>Profile</a>
+    <a class="on"><span class="ic"><i>⚙️</i></span>Admin</a>
+  </div>
+</div>
+
+</body>
+</html>

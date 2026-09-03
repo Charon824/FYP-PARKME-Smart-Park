@@ -1,0 +1,9 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # File names like Login.dart / Auth_Service.dart are intentional in this
+    # project; renaming them would break existing imports.
+    file_names: false
+    # BuildContext uses after await are already guarded with `mounted` checks.
+    use_build_context_synchronously: false
