@@ -55,7 +55,7 @@ WiFiMulti wifiMulti;
 #define API_KEY      "AIzaSyC4YizGnn8xIsCJ5ciAL_UYUxn_m0CSuFs"
 #define DATABASE_URL "https://parkme-22056469-default-rtdb.asia-southeast1.firebasedatabase.app/"
 #define USER_EMAIL    "parkme22056469@gmail.com"
-#define USER_PASSWORD "parkme22056469#"
+#define USER_PASSWORD "" // create your own firebase account and add the password here
 
 FirebaseData   fbdo;
 FirebaseAuth   auth;
