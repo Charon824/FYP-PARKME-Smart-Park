@@ -2,6 +2,7 @@
 Hi, here is a short introduction of this project
 
 ===============================================================================================================================================
+
 ParkMe is a smart parking mobile application designed to help users quickly find and reserve available parking spaces without spending unnecessary time searching for parking. The application provides real-time parking availability, allowing users to view the current status of parking spaces and make reservations directly through the mobile application.
 
 The system includes a physical hardware prototype developed using an ESP32, HC-SR04 ultrasonic sensors, traffic light modules, MFRC522 RFID reader, and servo motor. The hardware is programmed using Arduino C++ to detect parking occupancy, control parking indicators, and perform RFID-based verification with booking system. The prototype is used to demonstrate and test the communication and functionality between the physical hardware and the ParkMe mobile application.
